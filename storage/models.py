@@ -9,13 +9,16 @@ class ClientFile(models.Model):
     signature = models.TextField(editable=False)
     ts = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return 'File Name: %s, User: %s' % self.name % self.user
+
 class FileBlock(models.Model):
     file_id = models.ForeignKey(ClientFile)
     path = models.FilePathField()
     tag_id = models.TextField(editable=False)
     hash_sha1 = models.TextField(editable=False)
     hash_md5 = models.TextField(editable=False)
-    size = models.BigIntegerField(editable=False)
+    block_size = models.BigIntegerField(editable=False)
 
 class AuditResponse(models.Model):
     file_id = models.ForeignKey(ClientFile)

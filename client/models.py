@@ -15,6 +15,9 @@ class FileMeta(models.Model):
     hash_md5 = models.CharField(max_length=32, editable=False)
     signature = models.TextField(editable=False)
 
+    def __str__(self):
+        return 'File Name: %s, User: %s' % self.name % self.user
+
 class FileAudit(models.Model):
     file_id = models.ForeignKey(FileMeta)
     request_ts = models.DateTimeField(auto_now_add=True)
