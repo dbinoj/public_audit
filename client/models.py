@@ -14,6 +14,7 @@ class FileMeta(models.Model):
     hash_sha1 = models.CharField(max_length=160, editable=False)
     hash_md5 = models.CharField(max_length=32, editable=False)
     signature = models.TextField(editable=False)
+    ts = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         return 'File Name: %s, User: %s' % self.name % self.user
