@@ -7,5 +7,6 @@ AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 class AuditRequest(models.Model):
     user = models.ForeignKey(AUTH_USER_MODEL)
+    name = models.CharField(max_length=200, default=" ")
     storage_file_id = models.IntegerField(editable=False)
     result = models.CharField(default="Auditing...",max_length=200)
