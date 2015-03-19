@@ -90,6 +90,12 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
 
+# Media configs 
+# https://docs.djangoproject.com/en/1.7/ref/settings/#media-root
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "storage/client_files")
+
+
 TEMPLATE_DIRS = [
     os.path.join(BASE_DIR, "templates"),
 ]
