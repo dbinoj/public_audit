@@ -18,7 +18,7 @@
                                         Name
                                     </th>
                                     <th class="span4">
-                                        Description
+                                        Size
                                     </th>
                                     <th class="span1">
                                         Actions
@@ -54,10 +54,11 @@
                             </div>
                             <div class="panel-body">
                                 <div class="row">
-                                    <form role="form">
+                                    <form role="form" method="POST" action="" enctype="multipart/form-data">
+                                        {% csrf_token %}
                                         <div class="col-lg-6">
                                             <div class="form-group">
-                                                {{ form.as_p }}
+                                                {{ form.file_field }}
                                             </div>
                                         </div>
                                         <!-- /.col-lg-6 (nested) -->
