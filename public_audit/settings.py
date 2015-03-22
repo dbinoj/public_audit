@@ -99,3 +99,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "storage/client_files")
 TEMPLATE_DIRS = [
     os.path.join(BASE_DIR, "templates"),
 ]
+
+# Block size in bytes. Defaults to 10 Kilobytes if not specified.
+# STORAGE_BLOCK_SIZE = 10240

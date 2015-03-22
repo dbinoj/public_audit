@@ -1,8 +1,13 @@
 from django.shortcuts import render, get_object_or_404
 
 from client.models import FileMeta
+from django.conf import settings
 
 from .forms import FileUploadForm
+
+
+STORAGE_BLOCK_SIZE = getattr(settings, 'STORAGE_BLOCK_SIZE', 10240)
+
 # Create your views here.
 
 
