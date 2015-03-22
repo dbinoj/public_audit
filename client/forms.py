@@ -2,4 +2,4 @@ from django import forms
 
 
 class FileUploadForm(forms.Form):
-    file_field = forms.FileField(label="")
+    file_field = forms.FileField(label="", required=True)

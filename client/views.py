@@ -7,7 +7,9 @@ from .forms import FileUploadForm
 
 
 def index(request):
-    form = FileUploadForm()
+    form = FileUploadForm(request.POST or None, request.FILES or None)
+    if form.is_valid():
+        print "Valid Form"
     file_list = FileMeta.objects.order_by('ts')
     context = {'file_list': file_list, "form": form}
     return render(request, 'client/index.html', context)
