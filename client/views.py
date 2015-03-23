@@ -4,6 +4,7 @@ from client.models import FileMeta
 from django.conf import settings
 
 from .forms import FileUploadForm
+from .utils import split_files
 
 
 STORAGE_BLOCK_SIZE = getattr(settings, 'STORAGE_BLOCK_SIZE', 10240)
@@ -17,6 +18,10 @@ def index(request):
         file = request.FILES['file_field']
         file_size = len(file)
         file_name = file.name
+        blocks = split_files(file.read(), STORAGE_BLOCK_SIZE)
+        for key, value in blocks.iteritems() :
+                print key
+
     file_list = FileMeta.objects.order_by('ts')
     context = {'file_list': file_list, "form": form}
     return render(request, 'client/index.html', context)
