@@ -10,8 +10,10 @@ from Crypto.PublicKey import RSA
 
 import base64
 import cStringIO
+import hashlib
 
 from rsa.bigfile import *
+from functools import partial
 
 STORAGE_BLOCK_SIZE = getattr(settings, 'STORAGE_BLOCK_SIZE', 10240)
 
@@ -24,11 +26,21 @@ def index(request):
         file = request.FILES['file_field']
         file_size = file.size
         file_name = file.name
+        md5 = hashlib.new('md5')
+        sha1 = hashlib.new('sha1')
+        with file:
+            for chunk in iter(partial(file.read, 8192), ''):
+                md5.update(chunk)
+                sha1.update(chunk)
+
+        file_md5 = md5.hexdigest()
+        file_sha1 = sha1.hexdigest()
+        print file_md5, file_sha1
+        exit()
         RSAkey = RSA.generate(1024)
         blocks = split_files(file.read(), STORAGE_BLOCK_SIZE)
         blocks_enc = {}
         for key, value in blocks.iteritems() :
-                enc_value = cStringIO.StringIO()
                 plain_value = cStringIO.StringIO()
                 plain_value.write(value)
                 encrypt_bigfile(plain_value, enc_value, pubkey)
