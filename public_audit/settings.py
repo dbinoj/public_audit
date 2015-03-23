@@ -101,4 +101,4 @@ TEMPLATE_DIRS = [
 ]
 
 # Block size in bytes. Defaults to 10 Kilobytes if not specified.
-# STORAGE_BLOCK_SIZE = 10240
+STORAGE_BLOCK_SIZE = 10
