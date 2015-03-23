@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 
 class ClientFile(models.Model):
+    file_id = models.ForeignKey('client.FileMeta', null=True)
     name = models.CharField(max_length=200)
     size = models.BigIntegerField(editable=False)
     blocks = models.IntegerField(editable=False)

@@ -6,8 +6,8 @@ AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 # Create your models here.
 
 class FileMeta(models.Model):
-    user = models.ForeignKey(AUTH_USER_MODEL)
-    storage_file_id = models.IntegerField(editable=False)
+    user = models.ForeignKey(AUTH_USER_MODEL, null=True)
+    storage_file_id = models.IntegerField(editable=False, null=True)
     name = models.CharField(max_length=200)
     size = models.BigIntegerField(editable=False)
     private_key = models.TextField(editable=False)

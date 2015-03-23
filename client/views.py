@@ -3,10 +3,11 @@ from django.shortcuts import render, get_object_or_404
 from client.models import FileMeta
 from django.conf import settings
 
-from .forms import FileUploadForm
-from .utils import split_files
+from client.forms import FileUploadForm
+from client.utils import split_files
 
-import rsa
+from Crypto.PublicKey import RSA 
+
 import base64
 import cStringIO
 
@@ -23,7 +24,7 @@ def index(request):
         file = request.FILES['file_field']
         file_size = file.size
         file_name = file.name
-        (pubkey, privkey) = rsa.newkeys(512)
+        RSAkey = RSA.generate(1024)
         blocks = split_files(file.read(), STORAGE_BLOCK_SIZE)
         blocks_enc = {}
         for key, value in blocks.iteritems() :
