@@ -6,7 +6,9 @@ from django.conf import settings
 from client.forms import FileUploadForm
 from client.utils import split_files
 
-from Crypto.PublicKey import RSA 
+from Crypto.PublicKey import RSA
+from Crypto.Signature import PKCS1_v1_5 
+from Crypto.Hash import SHA256
 
 import base64
 import cStringIO
@@ -28,16 +30,29 @@ def index(request):
         file_name = file.name
         md5 = hashlib.new('md5')
         sha1 = hashlib.new('sha1')
+        sha256 = SHA256.new() 
         with file:
             for chunk in iter(partial(file.read, 8192), ''):
                 md5.update(chunk)
                 sha1.update(chunk)
+                sha256.update(chunk)
 
+        RSAkey = RSA.generate(1024)
         file_md5 = md5.hexdigest()
         file_sha1 = sha1.hexdigest()
-        print file_md5, file_sha1
+        signer = PKCS1_v1_5.new(RSAkey)
+        signature = signer.sign(sha256)
+        signature_b64 = base64.b64encode(signature)
+
+        # verifyer = PKCS1_v1_5.new(RSAkey.publickey())
+        # if verifyer.verify(sha256, base64.b64decode(signature_b64)):
+        #     print "Verified"
+        # else:
+        #     print "Not Verified"
+
         exit()
-        RSAkey = RSA.generate(1024)
+        filemeta = FileMeta.objects.create(name, size, private_key, hash_sha1, hash_md5, signature_b64)
+        
         blocks = split_files(file.read(), STORAGE_BLOCK_SIZE)
         blocks_enc = {}
         for key, value in blocks.iteritems() :
