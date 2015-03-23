@@ -17,7 +17,8 @@ class FileMeta(models.Model):
     ts = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
-        return 'File Name: %s, User: %s' % self.name % self.user
+        #return 'File Name: %s, User: %s' % self.name % self.user
+        return 'File Name: %s' % self.name
 
 class FileAudit(models.Model):
     file_id = models.ForeignKey(FileMeta)

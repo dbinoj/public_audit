@@ -50,8 +50,9 @@ def index(request):
         # else:
         #     print "Not Verified"
 
+        filemeta = FileMeta.objects.create(name=file_name, size=file_size, private_key=RSAkey.exportKey(), hash_sha1=file_sha1, hash_md5=file_md5, signature=signature_b64)
+        print filemeta.id
         exit()
-        filemeta = FileMeta.objects.create(name, size, private_key, hash_sha1, hash_md5, signature_b64)
         
         blocks = split_files(file.read(), STORAGE_BLOCK_SIZE)
         blocks_enc = {}
