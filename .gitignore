@@ -3,3 +3,4 @@
 *.py~
 *.sqlite
 *.sqlite3
+storage/client_files/*
