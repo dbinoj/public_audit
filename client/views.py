@@ -18,13 +18,13 @@ from functools import partial
 import base64
 import cStringIO
 import hashlib
+import rsa.randnum
 
 import pprint
 
 STORAGE_BLOCK_SIZE = getattr(settings, 'STORAGE_BLOCK_SIZE', 10240)
 
 # Create your views here.
-
 
 def index(request):
     form = FileUploadForm(request.POST or None, request.FILES or None)
@@ -34,7 +34,7 @@ def index(request):
         file_name = file.name
         md5 = hashlib.new('md5')
         sha1 = hashlib.new('sha1')
-        sha256 = SHA256.new() 
+        sha256 = SHA256.new()
         with file:
             for chunk in iter(partial(file.read, 8192), ''):
                 md5.update(chunk)
@@ -42,15 +42,14 @@ def index(request):
                 sha256.update(chunk)
 
         RSAkey = RSA.generate(1024)
+        AESkey = rsa.randnum.read_random_bits(128)
+        pprint.pprint(AESkey)
         file_md5 = md5.hexdigest()
         file_sha1 = sha1.hexdigest()
         signer = PKCS1_v1_5.new(RSAkey)
         signature = signer.sign(sha256)
         signature_b64 = base64.b64encode(signature)
-        print "BEGIN"
-        pprint.pprint(RSAkey)
-        print "END"
-        exit()
+        
         # verifyer = PKCS1_v1_5.new(RSAkey.publickey())
         # if verifyer.verify(sha256, base64.b64decode(signature_b64)):
         #     print "Verified"
@@ -61,6 +60,7 @@ def index(request):
             name=file_name, 
             size=file_size, 
             private_key=RSAkey.exportKey(), 
+            aes_key=AESkey,
             hash_sha1=file_sha1, 
             hash_md5=file_md5, 
             signature=signature_b64
@@ -68,18 +68,16 @@ def index(request):
 
         blocks = split_files(file.read(), STORAGE_BLOCK_SIZE)
         blocks_enc = {}
-        """
         for key, value in blocks.iteritems() :
                 plain_value = cStringIO.StringIO()
                 plain_value.write(value)
-                encrypt_bigfile(plain_value, enc_value, RSAkey.publickey())
+                encrypt
                 enc_rev = cStringIO.StringIO()
                 plain_rev = cStringIO.StringIO()
                 enc_rev.write(base64.b64decode(b64en_en))
                 decrypt_bigfile(enc_rev, plain_rev, RSAkey)
                 b64en_de_rev = base64.b64encode(plain_rev)
                 exit()
-        """
 
     file_list = FileMeta.objects.order_by('ts')
     context = {'file_list': file_list, "form": form}

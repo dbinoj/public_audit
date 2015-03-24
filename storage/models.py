@@ -1,6 +1,8 @@
 from django.db import models
 from django.conf import settings
+
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
+
 # Create your models here.
 
 class ClientFile(models.Model):
