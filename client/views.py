@@ -15,10 +15,12 @@ from Crypto.Hash import SHA256
 from rsa.bigfile import *
 from functools import partial
 
+import os, tempfile
 import base64
 import cStringIO
 import hashlib
 import rsa.randnum
+import storage
 
 import pprint
 
@@ -35,15 +37,16 @@ def index(request):
         md5 = hashlib.new('md5')
         sha1 = hashlib.new('sha1')
         sha256 = SHA256.new()
-        with file:
-            for chunk in iter(partial(file.read, 8192), ''):
-                md5.update(chunk)
-                sha1.update(chunk)
-                sha256.update(chunk)
+        for chunk in iter(partial(file.read, 8192), ''):
+            md5.update(chunk)
+            sha1.update(chunk)
+            sha256.update(chunk)
+        
+        # The above with block sends the file pointer to the end of the file
+        file.seek(0, 0)
 
         RSAkey = RSA.generate(1024)
         AESkey = rsa.randnum.read_random_bits(128)
-        pprint.pprint(AESkey)
         file_md5 = md5.hexdigest()
         file_sha1 = sha1.hexdigest()
         signer = PKCS1_v1_5.new(RSAkey)
@@ -60,7 +63,7 @@ def index(request):
             name=file_name, 
             size=file_size, 
             private_key=RSAkey.exportKey(), 
-            aes_key=AESkey,
+            aes_key=AESkey, 
             hash_sha1=file_sha1, 
             hash_md5=file_md5, 
             signature=signature_b64
@@ -69,14 +72,18 @@ def index(request):
         blocks = split_files(file.read(), STORAGE_BLOCK_SIZE)
         blocks_enc = {}
         for key, value in blocks.iteritems() :
-                plain_value = cStringIO.StringIO()
+                plain_value = tempfile.NamedTemporaryFile()
                 plain_value.write(value)
-                encrypt
-                enc_rev = cStringIO.StringIO()
-                plain_rev = cStringIO.StringIO()
-                enc_rev.write(base64.b64decode(b64en_en))
-                decrypt_bigfile(enc_rev, plain_rev, RSAkey)
-                b64en_de_rev = base64.b64encode(plain_rev)
+                block_path = os.path.join(
+                                    getattr(settings, 'BASE_DIR'),
+                                    'storage',
+                                    'client_files', 
+                                    str(key)
+                )
+                
+                encrypt_file(AESkey, plain_value.name, block_path)
+                if plain_value.closed == False:
+                    plain_value.close()
                 exit()
 
     file_list = FileMeta.objects.order_by('ts')

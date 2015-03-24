@@ -16,18 +16,18 @@ def split_files(file, chunkSize):
 
     return blocks
 
-def encrypt_file(key, in_file, out_filename, chunksize=64*1024):
+def encrypt_file(key, in_filename, out_filename, chunksize=64*1024):
     iv = ''.join(chr(random.randint(0, 0xFF)) for i in range(16))
     encryptor = AES.new(key, AES.MODE_CBC, iv)
-    filesize = len(in_file)
+    filesize = len(in_filename)
 
-    with in_file:
-        with open(out_filename, 'wb') as outfile:
+    with open(in_filename, 'rb') as infile:
+        with open(out_filename, 'wb+') as outfile:
             outfile.write(struct.pack('<Q', filesize))
             outfile.write(iv)
 
             while True:
-                chunk = in_file.read(chunksize)
+                chunk = infile.read(chunksize)
                 if len(chunk) == 0:
                     break
                 elif len(chunk) % 16 != 0:
