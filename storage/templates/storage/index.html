@@ -21,9 +21,6 @@
                                         FileName
                                     </th>
                                     <th class="span2">
-                                        FileID
-                                    </th>
-                                    <th class="span2">
                                          Size
                                     </th>
                                     <th class="span2">
@@ -32,26 +29,24 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                {% for file in file_list %}
                                 <tr>
                                     <td>
-                                        1
+                                        {{ forloop.counter }}
                                     </td>
                                     <td>
-                                        Sample Data
+                                        {{ file.name }}
                                     </td>
                                     <td>
-                                       <!-- <a href="detail" class="btn btn-blue">Detail</a>
-                                        <a href="start/" class="btn btn-success">Start</a>
-                                        <a href="delete" class="btn btn-danger">Delete</a>-->
-                                        123
+                                         {{ file.size }}
                                     </td>
                                     <td>
-                                        45kb
-                                    </td>
-                                    <td>
-                                       <a href="#" class="btn btn-success">Send</a>
+                                       <a href="{% url 'storage:file_metadata_send' file.id %}" class="btn btn-success" >Send</a>
                                     </td> 
                                 </tr>
+                                {% empty %}
+                                    <center>Sorry, no files uploaded yet.</center>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
