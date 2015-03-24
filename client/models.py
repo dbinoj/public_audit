@@ -11,7 +11,7 @@ class FileMeta(models.Model):
     name = models.CharField(max_length=200)
     size = models.BigIntegerField(editable=False)
     private_key = models.TextField(editable=False)
-    aes_key = models.TextField(editable=False, null=True)
+    aes_key = models.BinaryField(editable=False, null=True)
     hash_sha1 = models.CharField(max_length=160, editable=False)
     hash_md5 = models.CharField(max_length=32, editable=False)
     signature = models.TextField(editable=False)
