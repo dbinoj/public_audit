@@ -4,6 +4,7 @@ from django.db import models
 
 class ClientFile(models.Model):
     # file_id = models.ForeignKey('client.FileMeta', null=True) # not needed cos its refered from client's FileMeta
+    user = models.ForeignKey(AUTH_USER_MODEL, null=True)
     name = models.CharField(max_length=200)
     size = models.BigIntegerField(editable=False)
     blocks = models.IntegerField(editable=False)
@@ -11,7 +12,7 @@ class ClientFile(models.Model):
     ts = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return 'File Name: %s, User: %s' % self.name % self.user
+        return 'File Name: %s' % self.name
 
 class FileBlock(models.Model):
     file_id = models.ForeignKey(ClientFile)
