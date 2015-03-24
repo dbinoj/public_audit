@@ -19,6 +19,8 @@ import base64
 import cStringIO
 import hashlib
 
+import pprint
+
 STORAGE_BLOCK_SIZE = getattr(settings, 'STORAGE_BLOCK_SIZE', 10240)
 
 # Create your views here.
@@ -45,7 +47,10 @@ def index(request):
         signer = PKCS1_v1_5.new(RSAkey)
         signature = signer.sign(sha256)
         signature_b64 = base64.b64encode(signature)
-
+        print "BEGIN"
+        pprint.pprint(RSAkey)
+        print "END"
+        exit()
         # verifyer = PKCS1_v1_5.new(RSAkey.publickey())
         # if verifyer.verify(sha256, base64.b64decode(signature_b64)):
         #     print "Verified"
@@ -59,11 +64,11 @@ def index(request):
         for key, value in blocks.iteritems() :
                 plain_value = cStringIO.StringIO()
                 plain_value.write(value)
-                encrypt_bigfile(plain_value, enc_value, pubkey)
+                encrypt_bigfile(plain_value, enc_value, RSAkey.publickey())
                 enc_rev = cStringIO.StringIO()
                 plain_rev = cStringIO.StringIO()
                 enc_rev.write(base64.b64decode(b64en_en))
-                decrypt_bigfile(enc_rev, plain_rev, privkey)
+                decrypt_bigfile(enc_rev, plain_rev, RSAkey)
                 b64en_de_rev = base64.b64encode(plain_rev)
                 exit()
         """
