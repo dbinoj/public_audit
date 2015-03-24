@@ -1,7 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 
-from client.models import FileMeta
 from django.conf import settings
+
+from client.models import FileMeta
+from storage.models import ClientFile, FileBlock
 
 from client.forms import FileUploadForm
 from client.utils import split_files
@@ -10,12 +12,12 @@ from Crypto.PublicKey import RSA
 from Crypto.Signature import PKCS1_v1_5 
 from Crypto.Hash import SHA256
 
+from rsa.bigfile import *
+from functools import partial
+
 import base64
 import cStringIO
 import hashlib
-
-from rsa.bigfile import *
-from functools import partial
 
 STORAGE_BLOCK_SIZE = getattr(settings, 'STORAGE_BLOCK_SIZE', 10240)
 
@@ -51,29 +53,30 @@ def index(request):
         #     print "Not Verified"
 
         filemeta = FileMeta.objects.create(name=file_name, size=file_size, private_key=RSAkey.exportKey(), hash_sha1=file_sha1, hash_md5=file_md5, signature=signature_b64)
-        """
         blocks = split_files(file.read(), STORAGE_BLOCK_SIZE)
         blocks_enc = {}
+        """
         for key, value in blocks.iteritems() :
                 plain_value = cStringIO.StringIO()
                 plain_value.write(value)
                 encrypt_bigfile(plain_value, enc_value, pubkey)
-                b64en_de = base64.b64encode(plain_value.getvalue())
-                b64en_en = base64.b64encode(enc_value.getvalue())
                 enc_rev = cStringIO.StringIO()
                 plain_rev = cStringIO.StringIO()
                 enc_rev.write(base64.b64decode(b64en_en))
                 decrypt_bigfile(enc_rev, plain_rev, privkey)
                 b64en_de_rev = base64.b64encode(plain_rev)
-                print b64en_de
-                print b64en_en
-                print b64en_de_rev
                 exit()
         """
+
     file_list = FileMeta.objects.order_by('ts')
     context = {'file_list': file_list, "form": form}
     return render(request, 'client/index.html', context)
 
 def file_detail(request, file_id):
+    file_meta = get_object_or_404(FileMeta, pk=file_id)
+    return render(request, 'client/file_detail.html', {'file_meta', file_meta})
+
+
+def file_request_audit(request, file_id):
     file_meta = get_object_or_404(FileMeta, pk=file_id)
     return render(request, 'client/file_detail.html', {'file_meta', file_meta})
