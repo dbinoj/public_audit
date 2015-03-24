@@ -26,7 +26,6 @@ STORAGE_BLOCK_SIZE = getattr(settings, 'STORAGE_BLOCK_SIZE', 10240)
 
 # Create your views here.
 
-
 def index(request):
     form = FileUploadForm(request.POST or None, request.FILES or None)
     if form.is_valid():
@@ -67,25 +66,18 @@ def index(request):
             signature=signature_b64
         )
 
-        print "BEGIN"
-        pprint.pprint(filemeta.aes_key)
-        print "END"
-        exit()
-
         blocks = split_files(file.read(), STORAGE_BLOCK_SIZE)
         blocks_enc = {}
-        """
         for key, value in blocks.iteritems() :
                 plain_value = cStringIO.StringIO()
                 plain_value.write(value)
-                encrypt_bigfile(plain_value, enc_value, RSAkey.publickey())
+                encrypt
                 enc_rev = cStringIO.StringIO()
                 plain_rev = cStringIO.StringIO()
                 enc_rev.write(base64.b64decode(b64en_en))
                 decrypt_bigfile(enc_rev, plain_rev, RSAkey)
                 b64en_de_rev = base64.b64encode(plain_rev)
                 exit()
-        """
 
     file_list = FileMeta.objects.order_by('ts')
     context = {'file_list': file_list, "form": form}
