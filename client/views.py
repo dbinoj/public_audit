@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 
 from django.conf import settings
 
@@ -79,9 +79,9 @@ def index(request):
 
 def file_detail(request, file_id):
     file_meta = get_object_or_404(FileMeta, pk=file_id)
-    return render(request, 'client/file_detail.html', {'file_meta', file_meta})
+    return render(request, 'client/file_detail.html', {'file_meta': file_meta})
 
 
 def file_request_audit(request, file_id):
     file_meta = get_object_or_404(FileMeta, pk=file_id)
-    return render(request, 'client/file_detail.html', {'file_meta', file_meta})
+    return redirect('client:index')
