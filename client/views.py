@@ -72,6 +72,16 @@ def index(request):
         blocks = split_files(file.read(), STORAGE_BLOCK_SIZE)
         blocks_enc = {}
         for key, value in blocks.iteritems() :
+                filemeta = FileMeta.objects.create(
+                    file_id=filemeta.id
+                    path=file_size, 
+                    hash_sha1=file_sha1, 
+                    hash_md5=file_md5, 
+                    signature=signature_b64
+                    block_size=STORAGE_BLOCK_SIZE
+        )
+                    
+        )
                 plain_value = tempfile.NamedTemporaryFile()
                 plain_value.write(value)
                 block_path = os.path.join(
