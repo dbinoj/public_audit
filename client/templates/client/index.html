@@ -32,15 +32,16 @@
                                 </tr>
                             </thead>
                             <tbody>
+                            {% for file in file_list %}
                                 <tr>
                                     <td>
                                         1
                                     </td>
                                     <td>
-                                        Sample Data
+                                        {{ file.name }}
                                     </td>
                                     <td>
-                                        45kb
+                                        {{ file.size }}
                                     </td>
                                     <td>
                                         <!--<a href="detail" class="btn btn-blue">Detail</a>-->
@@ -51,6 +52,9 @@
                                         Waiting for result
                                     </td>
                                 </tr>
+                                {% empty %}
+                                    <center>Sorry, no files uploaded yet.</center>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>

@@ -51,9 +51,7 @@ def index(request):
         #     print "Not Verified"
 
         filemeta = FileMeta.objects.create(name=file_name, size=file_size, private_key=RSAkey.exportKey(), hash_sha1=file_sha1, hash_md5=file_md5, signature=signature_b64)
-        print filemeta.id
-        exit()
-        
+        """
         blocks = split_files(file.read(), STORAGE_BLOCK_SIZE)
         blocks_enc = {}
         for key, value in blocks.iteritems() :
@@ -71,7 +69,7 @@ def index(request):
                 print b64en_en
                 print b64en_de_rev
                 exit()
-
+        """
     file_list = FileMeta.objects.order_by('ts')
     context = {'file_list': file_list, "form": form}
     return render(request, 'client/index.html', context)
