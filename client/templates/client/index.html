@@ -24,9 +24,6 @@
                                         Size
                                     </th>
                                     <th class="span1">
-                                        View
-                                    </th>
-                                    <th class="span1">
                                         Actions
                                     </th>
                                      <th class="span1">
@@ -41,19 +38,15 @@
                                         {{ forloop.counter }}
                                     </td>
                                     <td>
-                                        {{ file.name }}
+                                        <a href="" >{{ file.name }}</a>
                                     </td>
                                     <td>
                                         {{ file.size }}
                                     </td>
                                     <td>
-                                      <a href="#" class="btn btn-blue">Details</a> 
-                                    </td>
-                                    <td>
-
-                                        <!--<a href="detail" class="btn btn-blue">Detail</a>-->
-                                        <a href="#" class="btn btn-success">Request TPA</a>
-                                        <!--<a href="delete" class="btn btn-danger">Delete</a>-->
+                                        <a href="{% url 'client:file_detail' file.id %}" class="btn btn-primary">View Details</a> 
+                                        <a href="{% url 'client:file_request_audit' file.id %}" class="btn btn-success">Request TPA</a>
+                                        <a class="btn btn-danger disabled">Delete</a>
                                     </td>
                                     <td>
                                         Waiting for result...
