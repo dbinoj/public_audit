@@ -5,7 +5,7 @@ from tpa import views
 urlpatterns = patterns('',
     # /tpa/
     url(r'^$', views.index, name='index'),
-    # /storage/file/5/
-   # url(r'^file/(?P<file_id>\d+)/$', views.file_detail, name='file_detail'),
+    # /tpa/5/rts/
+    url(r'^tpa/(?P<file_id>\d+)/rts/$', views.file_requestto_server, name='file_requestto_server'),
 
 )

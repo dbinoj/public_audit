@@ -17,6 +17,15 @@ class FileMeta(models.Model):
     signature = models.TextField(editable=False)
     ts = models.DateTimeField(auto_now_add=True, null=True)
 
+    def get_audit_result(self):
+        try:
+            fileaudit = FileAudit.objects.get(file_id=self)
+        except FileAudit.DoesNotExist:
+            fileaudit = None
+        if fileaudit is not None:
+            return fileaudit.result
+        return ""
+
     def __str__(self):
         #return 'File Name: %s, User: %s' % self.name % self.user
         return 'File Name: %s' % self.name
