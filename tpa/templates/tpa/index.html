@@ -20,12 +20,10 @@
                                     <th class="span2">
                                         FileName
                                     </th>
-                                    <th class="span2">
-                                        Size
-                                    </th>
+                                    
                                     
                                     <th class="span2">
-                                        Verify
+                                        Action
                                     </th>
                                     <th class="span2">
                                         Status
@@ -42,18 +40,17 @@
                                        {{ file.name }}
                                     </td>
                                     <td>
-                                       {{ file.size }}
+                                       <a href="#" class="btn btn-primary">request to server</a>
+                                        <a href="{% url 'tpa:file_requestto_server' file.id %}" class="btn btn-danger">verify</a> 
                                         <!--<a href="detail" class="btn btn-blue">Detail</a>
                                         <a href="start/" class="btn btn-success">Start</a>
                                         <a href="delete" class="btn btn-danger">Delete</a>-->
                                     </td>
-                                    
+                                         
                                     <td>
-                                        <a href="{% url 'tpa:file_requestto_server' file.id %}" class="btn btn-danger">verify</a> 
+                                        to be audited
                                     </td>
-                                    <td>
-                                       to be audited
-                                    </td>
+                                   
                                 </tr>{% empty %}
                                     <center>Sorry, no request has been received  yet.</center>
                                 {% endfor %}
