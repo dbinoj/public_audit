@@ -8,11 +8,11 @@ def index(request):
     return render(request, 'tpa/index.html',context)
 
 
-def file_requestto_server(request, id):
+def file_requestto_server(request, file_id):
     file_request = get_object_or_404(AuditRequest, pk=id)
     return redirect('tpa:index')
 
 
-def verify(request, id):
+def verify(request, file_id):
     file_request = get_object_or_404(AuditRequest, pk=id)
     return redirect('tpa:index')
