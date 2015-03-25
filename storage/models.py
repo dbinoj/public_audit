@@ -14,6 +14,15 @@ class ClientFile(models.Model):
     signature = models.TextField(editable=False)
     ts = models.DateTimeField(auto_now_add=True)
 
+    def get_audit_result(self):
+        try:
+            auditresponse = AuditResponse.objects.get(file_id=self)
+        except AuditResponse.DoesNotExist:
+            auditresponse = None
+        if auditresponse is not None:
+            return auditresponse.result
+        return ""
+
     def __str__(self):
         return 'File Name: %s' % self.name
 
