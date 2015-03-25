@@ -21,11 +21,7 @@
                                         FileName
                                     </th>
                                     <th class="span2">
-                                        Size
-                                    </th>
-                                    
-                                    <th class="span2">
-                                        Verify
+                                        Actions
                                     </th>
                                     <th class="span2">
                                         Status
@@ -41,15 +37,10 @@
                                     <td>
                                        {{ file.name }}
                                     </td>
-                                    <td>
-                                       {{ file.size }}
-                                        <!--<a href="detail" class="btn btn-blue">Detail</a>
-                                        <a href="start/" class="btn btn-success">Start</a>
-                                        <a href="delete" class="btn btn-danger">Delete</a>-->
-                                    </td>
                                     
                                     <td>
-                                        <a href="{% url 'tpa:file_requestto_server' file.id %}" class="btn btn-danger">verify</a> 
+                                        <a href="{% url 'tpa:file_requestto_server' file.id %}" class="btn btn-primary">Ask Verification Data</a> 
+                                        <a href="{% url 'tpa:verify' file.id %}" class="btn btn-success">Verify</a> 
                                     </td>
                                     <td>
                                        to be audited
