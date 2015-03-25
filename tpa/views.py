@@ -9,10 +9,10 @@ def index(request):
 
 
 def file_requestto_server(request, file_id):
-    file_request = get_object_or_404(AuditRequest, pk=id)
+    file_request = get_object_or_404(AuditRequest, pk=file_id)
     return redirect('tpa:index')
 
 
 def verify(request, file_id):
-    file_request = get_object_or_404(AuditRequest, pk=id)
+    file_request = get_object_or_404(AuditRequest, pk=file_id)
     return redirect('tpa:index')
