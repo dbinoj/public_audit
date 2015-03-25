@@ -2,8 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 from django.conf import settings
 
-from client.models import FileMeta
-from storage.models import ClientFile, FileBlock
+from client.models import FileMeta, FileAudit
+from storage.models import ClientFile, FileBlock, AuditResponse
 from tpa.models import AuditRequest
 
 from client.forms import FileUploadForm
@@ -141,5 +141,20 @@ def file_request_audit(request, file_id):
     )
     auditrequest.name = file_meta.name
     auditrequest.client_message = client_message
+    auditrequest.result = "Audit Request Recieved from Client"
     auditrequest.save()
+
+
+    fileaudit, created = FileAudit.objects.get_or_create(
+        file_id = file_meta,
+    )
+    fileaudit.result = "Audit Request sent to TPA"
+    fileaudit.save()
+
+    auditresponse, created = AuditResponse.objects.get_or_create(
+        file_id = ClientFile.objects.get(pk=file_meta.storage_file_id),
+    )
+    auditresponse.result = "Waiting for TPA to request Verification Data."
+    auditresponse.save()
+
     return redirect('client:index')
