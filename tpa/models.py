@@ -9,4 +9,6 @@ class AuditRequest(models.Model):
     user = models.ForeignKey(AUTH_USER_MODEL, null=True)
     name = models.CharField(max_length=200, default=" ")
     storage_file_id = models.IntegerField(editable=False)
+    client_message = models.TextField(editable=False, null=True)
+    server_message = models.TextField(editable=False, null=True)
     result = models.CharField(default="Auditing...",max_length=200)
