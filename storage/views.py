@@ -16,12 +16,7 @@ def file_metadata_send(request, file_id):
         storage_file_id = file_id,
     )
     
-    server_message = file_meta.hash_md5 + '$' + file_meta.hash_sha1 + '$' + str(file_meta.storage_file_id) + '$' + file_meta.signature
-    auditrequest.client_message = client_message
-    auditrequest.name = file_meta.name
-    auditrequest.result = "Audit Request Recieved from Client"
-    auditrequest.save()
-    blocks = file_metadata.fileblock_set.order_by('path')
+    blocks = clientfile.fileblock_set.order_by('path')
     enc_md5 = hashlib.new('md5')
     enc_sha1 = hashlib.new('sha1')
     for block in blocks:
@@ -30,4 +25,13 @@ def file_metadata_send(request, file_id):
         encrypted_block.close()
         enc_md5.update(block_contents)
         enc_sha1.update(block_contents)
+    server_message = enc_md5.hexdigest() + '$' + enc_sha1.hexdigest() + '$' + str(file_id) + '$' + clientfile.signature
+    auditrequest.server_message = server_message
+    auditrequest.result = "Verification Message sent to TPA"
+    auditrequest.save()
+    auditresponse, created = AuditResponse.objects.get_or_create(
+        file_id = file_id,
+    )
+    auditresponse.result = "Verification Message sent to TPA"
+    auditresponse.save()
     return redirect('storage:index')

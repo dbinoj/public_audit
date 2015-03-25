@@ -24,7 +24,10 @@
                                          Size
                                     </th>
                                     <th class="span2">
-                                        Send Verification metadata
+                                        Action
+                                    </th>
+                                    <th class="span2">
+                                        Result
                                     </th>
                                 </tr>
                             </thead>
@@ -43,6 +46,9 @@
                                     <td>
                                        <a href="{% url 'storage:file_metadata_send' file.id %}" class="btn btn-success" >Send</a>
                                     </td> 
+                                    <td>
+                                         {{ file.get_audit_result }}
+                                    </td>
                                 </tr>
                                 {% empty %}
                                     <center>Sorry, no files uploaded yet.</center>

@@ -26,5 +26,27 @@ def file_requestto_server(request, file_id):
 
 
 def verify(request, file_id):
-    file_request = get_object_or_404(AuditRequest, pk=file_id)
+    auditrequest = get_object_or_404(AuditRequest, pk=file_id)
+    if auditrequest.client_message == auditrequest.server_message:
+        message = "File Verification Success"
+    else:
+        message = "File Verification Failed"
+    auditrequest.result = message
+    auditrequest.save()
+
+
+    auditresponse, created = AuditResponse.objects.get_or_create(
+        file_id = ClientFile.objects.get(pk=auditrequest.storage_file_id),
+    )
+    auditresponse.result = message
+    auditresponse.save()
+
+    filemeta = FileMeta.objects.get(
+        storage_file_id = auditrequest.storage_file_id,
+    )
+    fileaudit, created = FileAudit.objects.get_or_create(
+        file_id = filemeta,
+    )
+    fileaudit.result = message
+    fileaudit.save()
     return redirect('tpa:index')

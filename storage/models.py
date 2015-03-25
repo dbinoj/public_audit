@@ -18,10 +18,8 @@ class ClientFile(models.Model):
         try:
             auditresponse = AuditResponse.objects.get(file_id=self)
         except AuditResponse.DoesNotExist:
-            auditresponse = None
-        if auditresponse is not None:
-            return auditresponse.result
-        return ""
+        	return ""
+        return auditresponse.result
 
     def __str__(self):
         return 'File Name: %s' % self.name
