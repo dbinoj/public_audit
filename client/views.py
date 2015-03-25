@@ -136,10 +136,10 @@ def file_detail(request, file_id):
 def file_request_audit(request, file_id):
     file_meta = get_object_or_404(FileMeta, pk=file_id)
     client_message = "CONSTRUCT MESSAGE HERE"
-    AuditRequest.objects.filter(
+    auditrequest, created = AuditRequest.objects.get_or_create(
         storage_file_id = file_meta.storage_file_id,
-    ).update(
-        name = file_meta.name,
-        client_message = client_message
     )
+    auditrequest.name = file_meta.name
+    auditrequest.client_message = client_message
+    auditrequest.save()
     return redirect('client:index')
