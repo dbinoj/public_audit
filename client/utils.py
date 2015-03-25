@@ -19,8 +19,7 @@ def split_files(file, chunkSize):
 def encrypt_file(key, in_filename, out_filename, chunksize=64*1024):
     iv = ''.join(chr(random.randint(0, 0xFF)) for i in range(16))
     encryptor = AES.new(key, AES.MODE_CBC, iv)
-    filesize = len(in_filename)
-
+    filesize = os.path.getsize(in_filename)
     with open(in_filename, 'rb') as infile:
         with open(out_filename, 'wb+') as outfile:
             outfile.write(struct.pack('<Q', filesize))

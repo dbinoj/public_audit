@@ -43,7 +43,7 @@ def index(request):
             sha256.update(chunk)
         
         # The above with block sends the file pointer to the end of the file
-        file.seek(0, 0)
+        file.seek(0)
 
         RSAkey = RSA.generate(1024)
         AESkey = rsa.randnum.read_random_bits(128)
@@ -69,22 +69,50 @@ def index(request):
             signature=signature_b64
         )
 
+        clientfile = ClientFile.objects.create(
+                name=file_name,
+                size=file_size,
+                signature=signature_b64
+        )
+        filemeta.storage_file_id = clientfile.id
+        filemeta.save()
+
         blocks = split_files(file.read(), STORAGE_BLOCK_SIZE)
+        blocks_count = len(blocks)
+        clientfile.blocks = blocks_count
+        clientfile.save()
         blocks_enc = {}
-        for key, value in blocks.iteritems() :
-                plain_value = tempfile.NamedTemporaryFile()
-                plain_value.write(value)
-                block_path = os.path.join(
-                                    getattr(settings, 'BASE_DIR'),
-                                    'storage',
-                                    'client_files', 
-                                    str(key)
-                )
-                
-                encrypt_file(AESkey, plain_value.name, block_path)
-                if plain_value.closed == False:
-                    plain_value.close()
-                exit()
+        for key, value in blocks.iteritems():
+            plain_value = tempfile.NamedTemporaryFile()
+            plain_value.write(value)
+            block_path = os.path.join(
+                                getattr(settings, 'BASE_DIR'),
+                                'storage',
+                                'client_files', 
+                                str(key)
+            )
+            
+            encrypt_file(AESkey, plain_value.name, block_path)
+            encrypted_block = open(block_path, 'r')
+            block_md5 = hashlib.md5(encrypted_block.read()).hexdigest()
+            encrypted_block.seek(0)
+            block_sha1 = hashlib.sha1(encrypted_block.read()).hexdigest()
+            encrypted_block.seek(0)
+            block_sha256 = SHA256.new(encrypted_block.read())
+            block_signature = signer.sign(block_sha256)
+            block_signature_b64 = base64.b64encode(block_signature)
+            fileblock = FileBlock.objects.create(
+                file_id=clientfile,
+                path=block_path,
+                #tag_id=clientfile.id,
+                hash_sha1=block_sha1,
+                hash_md5=block_md5,
+                block_size=os.path.getsize(block_path),
+                signature=block_signature_b64
+            )
+            encrypted_block.close()
+            if plain_value.closed == False:
+                plain_value.close()
 
     file_list = FileMeta.objects.order_by('ts')
     context = {'file_list': file_list, "form": form}
