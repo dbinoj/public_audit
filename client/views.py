@@ -135,12 +135,12 @@ def file_detail(request, file_id):
 
 def file_request_audit(request, file_id):
     file_meta = get_object_or_404(FileMeta, pk=file_id)
-    client_message = "CONSTRUCT MESSAGE HERE"
     auditrequest, created = AuditRequest.objects.get_or_create(
         storage_file_id = file_meta.storage_file_id,
     )
-    auditrequest.name = file_meta.name
+    client_message = file_meta.hash_md5 + '$' + file_meta.hash_sha1 + '$' + str(file_meta.storage_file_id) + '$' + file_meta.signature
     auditrequest.client_message = client_message
+    auditrequest.name = file_meta.name
     auditrequest.result = "Audit Request Recieved from Client"
     auditrequest.save()
 

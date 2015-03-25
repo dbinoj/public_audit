@@ -43,7 +43,7 @@
                                         <a href="{% url 'tpa:verify' file.id %}" class="btn btn-success">Verify</a> 
                                     </td>
                                     <td>
-                                        to be audited
+                                       {{ file.result }}
                                     </td>
                                    
                                 </tr>{% empty %}
