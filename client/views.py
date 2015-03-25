@@ -4,6 +4,7 @@ from django.conf import settings
 
 from client.models import FileMeta
 from storage.models import ClientFile, FileBlock
+from tpa.models import AuditRequest
 
 from client.forms import FileUploadForm
 from client.utils import split_files, encrypt_file
@@ -134,4 +135,11 @@ def file_detail(request, file_id):
 
 def file_request_audit(request, file_id):
     file_meta = get_object_or_404(FileMeta, pk=file_id)
+    client_message = "CONSTRUCT MESSAGE HERE"
+    AuditRequest.objects.filter(
+        storage_file_id = file_meta.storage_file_id,
+    ).update(
+        name = file_meta.name,
+        client_message = client_message
+    )
     return redirect('client:index')
