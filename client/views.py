@@ -70,9 +70,9 @@ def index(request):
         )
 
         clientfile = ClientFile.objects.create(
-                name=file_name,
-                size=file_size,
-                signature=signature_b64
+            name=file_name,
+            size=file_size,
+            signature=signature_b64
         )
         filemeta.storage_file_id = clientfile.id
         filemeta.save()
