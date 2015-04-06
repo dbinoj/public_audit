@@ -15,6 +15,7 @@ from Crypto.Hash import SHA256
 
 from rsa.bigfile import *
 from functools import partial
+from django.core.context_processors import csrf
 
 import os, tempfile, collections
 import base64
@@ -158,3 +159,20 @@ def file_request_audit(request, file_id):
     auditresponse.save()
 
     return redirect('client:index')
+
+
+def login(request):
+    c={}
+    c.update(csrf(request))
+    return render( 'login.html', c)
+
+def my_view(request):
+    username = request.POST['username']
+    password = request.POST['password']
+    user = auth.authenticate(username=username, password=password)
+    if user is not None:
+        if user.is_active:
+            auth.login(request, user)
+            return HttpResponseRedirct('client:index')
+        else:
+            return HttpResponseRediect('client:login')
