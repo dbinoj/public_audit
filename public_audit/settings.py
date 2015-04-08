@@ -28,7 +28,8 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
+AUTH_USER_MODEL = 'client.User'
+ 
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
@@ -54,6 +55,7 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'public_audit.urls'
 
 WSGI_APPLICATION = 'public_audit.wsgi.application'
+
 
 
 # Database

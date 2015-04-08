@@ -4,28 +4,22 @@
     <p class="error">sorry invalid username and password</p>
 {% endif %}
     <div id="login">
-        <form action="{% url 'login' %}" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {% if next %}
-            <input type="hidden" name="next" value="{{ next }}" />
-        {% endif %}
-        <div class="control-group">
-            <label class="control-label" for="username">Username</label>
-            <div class="controls">
-                <input type="text" id="username" name="username"  placeholder="Username">
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="password">Password</label>
-            <div class="controls">
-                <input type="password" name="password" id="password" placeholder="Password">
-            </div>
-        </div>
-        <div class="control-group">
-            <div class="controls">
-                <button type="submit" class="btn">Login</button>
-            </div>
-        </div>
+        <form action="" method="post">
+{% csrf_token %}
+{% if form.errors %}<p>Please correct the following fields:</p>{% endif %}
+<div class="register_div">
+    {% if form.username.errors %}<p class="error">{{ form.username.errors }}</p>
+    {% endif %}
+    <p><label for="username"{% if form.username.errors %} class="error"{% endif %}>Username:</label></p>
+    <p>{{ form.username }}</p>
+</div>
+<div class="register_div">
+    {% if form.password.errors %}<p class="error">{{ form.password.errors }}</p>{% endif %}
+    <p><label for="password"{% if form.password.errors %} class="error"{% endif %}>Password:</label></p>
+    <p>{{ form.password }}</p>
+</div>
+    <p><input type="submit" alt="register" /></p>
+
         </form>
     </div>
 {% endblock %}

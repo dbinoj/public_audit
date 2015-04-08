@@ -1,12 +1,15 @@
 from django.shortcuts import render, get_object_or_404, redirect
-
+from django.shortcuts import render_to_response
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
+
 
 from client.models import FileMeta, FileAudit
 from storage.models import ClientFile, FileBlock, AuditResponse
 from tpa.models import AuditRequest
 
-from client.forms import FileUploadForm
+from client.forms import FileUploadForm 
 from client.utils import split_files, encrypt_file
 
 from Crypto.PublicKey import RSA
@@ -160,19 +163,39 @@ def file_request_audit(request, file_id):
 
     return redirect('client:index')
 
+@login_required
+def client(request):
+    if not request.user.is_authenticated():
+        return HrttpResponseRedirect('/login/')
+        client = request.user.get_profile
+        context = {'client': client}
+        return render_to_response('index.html', context, context_instance=RequestContext(request))
+        
 
-def login(request):
-    c={}
-    c.update(csrf(request))
-    return render( 'login.html', c)
 
-def my_view(request):
-    username = request.POST['username']
-    password = request.POST['password']
-    user = auth.authenticate(username=username, password=password)
-    if user is not None:
-        if user.is_active:
-            auth.login(request, user)
-            return HttpResponseRedirct('client:index')
+
+def LoginRequest(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect('/client/')
+        if request.method == 'POST':
+            form = LoginForm(request.POST)
+            if form.is_valid():
+                username = form.cleaned_data['username']
+                password = form.cleaned_data['password']
+                drinker = authenticate(username=username, password=password)
+                if drinker is not None:
+                    login(request, User)
+                    return HttpResponseRedirect('/client/')
+                else:
+                    return render_to_response('login.html', {'form': form}, context_instance=RequestContext(request))
+            else:
+                return render_to_response('login.html', {'form': form}, context_instance=RequestContext(request))
         else:
-            return HttpResponseRediect('client:login')
+            ''' user is not submitting the form, show the login form '''
+            form = LoginForm()
+            context = {'form': form}
+            return render_to_response('login.html', context, context_instance=RequestContext(request))
+
+def LogoutRequest(request):
+        logout(request)
+        return HttpResponseRedirect('/')

@@ -1,5 +1,7 @@
 from django.db import models
 from django.conf import settings
+from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
@@ -35,4 +37,13 @@ class FileAudit(models.Model):
     request_ts = models.DateTimeField(auto_now_add=True)
     response_ts = models.DateTimeField(null=True)
     result = models.CharField(default="Waiting for result...",max_length=200)
+
+class User(AbstractUser):
+    user = models.OneToOneField(User)
+    name = models.CharField(max_length=100)
+
+    def __unicode__(self):
+        return self.name
+    REQUIRED_FIELDS = ['user', 'name']
+        
 
