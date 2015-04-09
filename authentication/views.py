@@ -1,7 +1,16 @@
-from django.shortcuts import render
-from django.shortcuts import render_to_response
+from django.shortcuts import render, render_to_response, redirect
 from django.template import RequestContext
+from django.contrib.auth import logout
  
 def index(request):
-    return render_to_response('authentication/index.html', context_instance=RequestContext(request))
-# Create your views here.
+    if request.user.is_authenticated():
+        return redirect('client:index')
+    else:
+        return redirect('authentication:login_user')
+
+def login_user(request):
+    return render_to_response('authentication/login.html')
+
+def logout_user(request):
+    logout(request)
+    return redirect('authentication:index')
