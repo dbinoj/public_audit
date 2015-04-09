@@ -39,7 +39,7 @@ INSTALLED_APPS = (
     'client',
     'tpa',
     'storage'
-    'auth'
+    'auth',
 )
 
 MIDDLEWARE_CLASSES = (
