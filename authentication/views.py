@@ -1,6 +1,7 @@
 from django.shortcuts import render, render_to_response, redirect
 from django.template import RequestContext
 from django.contrib.auth import logout
+from authentication.forms import login_userForm
  
 def index(request):
     if request.user.is_authenticated():
