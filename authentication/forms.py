@@ -1,4 +1,3 @@
-
 from django import forms
 class  login_userForm(forms.Form):
     username        = forms.CharField(label=(u'UserName'))
