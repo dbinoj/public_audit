@@ -8,10 +8,15 @@ from authentication.forms import LoginUserForm
  
 def index(request):
     if request.user.is_authenticated():
-        return redirect('client:index')
+        if request.user.groups.filter(name="client").exists():
+            return redirect('client:index')
 
-    else:
-        return redirect('authentication:login_user')
+        elif request.user.groups.filter(name="storage").exists():
+            return redirect('storage:index')
+
+        elif request.user.groups.filter(name="tpa").exists():
+            return redirect('tpa:index')
+    return redirect('authentication:login_user')
 
 def login_user(request):
     form = LoginUserForm(request.POST or None)
@@ -20,14 +25,19 @@ def login_user(request):
         password = form.cleaned_data['password']
         user = authenticate(username=username, password=password)
         if user is not None:
-            login(request, user)
-            return render(request,'client/index.html')
-        else:
-            return render(request, 'authentication/login.html', {"form": form})
-               
-    else:
-        return render(request, 'authentication/login.html', {"form": form})
+            if user.groups.filter(name="client").exists():
+                login(request, user)
+                return redirect('client:index')
+
+            elif user.groups.filter(name="storage").exists():
+                login(request, user)
+                return redirect('storage:index')
+
+            elif user.groups.filter(name="tpa").exists():
+                login(request, user)
+                return redirect('tpa:index')
+    return render(request, 'authentication/login.html', {"form": form})
 
 def logout_user(request):
     logout(request)
-    return redirect('authentication:index')
+    return redirect('authentication:login_user')
