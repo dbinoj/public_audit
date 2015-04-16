@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
 
 from django.conf import settings
 
@@ -28,7 +29,7 @@ import pprint
 STORAGE_BLOCK_SIZE = getattr(settings, 'STORAGE_BLOCK_SIZE', 10240)
 
 # Create your views here.
-
+@login_required()
 def index(request):
     form = FileUploadForm(request.POST or None, request.FILES or None)
     if form.is_valid():

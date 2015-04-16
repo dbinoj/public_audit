@@ -38,7 +38,9 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'client',
     'tpa',
-    'storage'
+    'storage',
+    'authentication',
+
 )
 
 MIDDLEWARE_CLASSES = (
@@ -78,6 +80,8 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+LOGIN_URL = '/auth/login'
 
 
 # Static files (CSS, JavaScript, Images)
