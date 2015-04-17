@@ -96,7 +96,8 @@ def index(request):
                                 'client_files', 
                                 str(key)
             )
-            
+            if not os.path.exists('storage/client_files'):
+                os.makedirs('storage/client_files')
             encrypt_file(AESkey, plain_value.name, block_path)
             encrypted_block = open(block_path, 'r')
             block_contents = encrypted_block.read()
